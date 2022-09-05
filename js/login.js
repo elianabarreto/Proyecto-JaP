@@ -1,9 +1,14 @@
-document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("boton").addEventListener("click", function () {
+document.addEventListener("DOMContentLoaded", () => {
+
+    document.getElementById("boton").addEventListener("click", () => {
 
         let email = document.getElementById("email").value;
         let contraseña = document.getElementById("contraseña").value;
         let seCumple = true;
+
+        function guardarDatos(){
+            localStorage.setItem("Usuario", email);
+        };
 
         if (email == "") {
             seCumple = false;
@@ -16,7 +21,8 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         if (seCumple) {
-            window.location = "portada.html"; 
+            guardarDatos();
+            window.location = "index.html"; 
         };
     });
 });

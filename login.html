@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>eMercado - Todo lo que busques está aquí</title>
+  
+  <link href="https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+</head>
+
+<body class="text-center">
+  <main class="form-signin">
+
+    <div class="box">
+      <div class="container p-5">
+        <div class="imgBox">
+          <img class="img-fluid text-center mb-4" src="img/login.png" alt="e.mercado tu e_commerce favorito!">
+          <h1 class="h3 mb-3 fw-normal">Inicio de sesión</h1>
+        </div>
+        <div class="form-floating">
+          <input type="email" class="form-control" id="email" placeholder="Email">
+          <label for="email">Email</label>
+        </div>
+        <div class="form-floating">
+          <input type="password" class="form-control" id="contraseña" placeholder="Contraseña">
+          <label for="contraseña">Contraseña</label>
+        </div>
+        <div>
+          <button id="boton" class="w-100 btn btn-lg btn-primary" type="submit">Ingresar</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+  <footer class="text-muted">
+    <div class="container">
+      <p>Este sitio forma parte de <a href="https://jovenesaprogramar.edu.uy/" target="_blank">Jovenes a Programar</a> -
+        2022</p>
+      <p>Clickea <a target="_blank" href="Letra.pdf">aquí</a> para descargar la letra del obligatorio.</p>
+    </div>
+  </footer>
+  
+  <script src="js/login.js"></script>
+
+ <!--  <script type="module">
+
+    // Funciones importadas para autenticación con Google
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js";
+    // https://firebase.google.com/docs/web/setup#available-libraries
+      
+    // Configuración de la web con Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyB6xQwFYpt6g2vpUXnC5h3jCQFeqXD_A-8",
+        authDomain: "auth-304c5.firebaseapp.com",
+        projectId: "auth-304c5",
+        storageBucket: "auth-304c5.appspot.com",
+        messagingSenderId: "22693316387",
+        appId: "1:22693316387:web:c309bee8b15d8168cd6e96"
+    };
+      
+    // Inicializa Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider(app);
+      
+    boton.addEventListener("click", (e) => {
+        signInWithRedirect(auth, provider);
+      
+        getRedirectResult(auth)
+          .then((result) => {
+            // Esto nos da un Token de acceso de Google. Se usa para acceder a las APIs de Google.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            // Info de ususario registrado.
+            const user = result.user;
+        }).catch((error) => {
+            // Manejo de errores aquí.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // Email de cuenta de usuario utilizada.
+            const email = error.customData.email;
+            // Tipo de AuthCredential utilizada.
+            const credential = GoogleAuthProvider.credentialFromError(error);
+        });  
+    });
+
+  </script> -->
+
+</body>
+
+</html>
