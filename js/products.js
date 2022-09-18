@@ -1,3 +1,9 @@
+//Funcion que setea la ID de cada producto, y redirige a "product-info.html" para ver mas informacion
+function setProductID(id) {
+  localStorage.setItem("productID", id);
+  window.location = "product-info.html"
+};
+
 document.addEventListener("DOMContentLoaded", async function () {
 
   //Obtenemos del localStorage la ID correspondiente a cada categoria de productos para iterar luego
@@ -30,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   //Función para crear div con toda la info de cada producto dentro de su categoria correspondiente
   function infoProductHTML(producto) {
     return `
-    <div class="list-group">
+    <div onclick = "setProductID(${producto.id})" class="list-group">
       <div class="list-group-item list-group-item-action cursor-active">
         <div class="row">
             <div class="col-3">
