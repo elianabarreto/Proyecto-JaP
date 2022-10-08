@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       <div class="list-group-item list-group-item-action cursor-active">
         <div class="row">
             <div class="col-3">
-              <img class="img-thumbnail" src="${producto.image}" alt="${producto.description}">
+              <img class="img-thumbnail rounded" src="${producto.image}" alt="${producto.description}">
             </div>
             <div class="col">
             <div class="d-flex w-100 justify-content-between">

@@ -1,5 +1,6 @@
 body {
   background-color: #eee;
+  
 }
 
 .jumbotron,
@@ -15,6 +16,11 @@ body {
 
 nav a {
   text-decoration: none;
+}
+
+.navbar {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .bd-placeholder-img {

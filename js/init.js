@@ -40,11 +40,34 @@ let getJSONData = function (url) {
     });
 };
 
+function borrarUsuario() {
+  localStorage.removeItem("Usuario")
+};
+
 //Funcion para insertar codigo html con el dato que el usuario ingresa
 function usuarioBarraNav(usuario) {
   return `
-  <a class="nav-link" href="my-profile.html">${usuario}</a>
-  `
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="my-profile.html" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              ${usuario}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+              <li><a class="dropdown-item" href="cart.html">Mi carrito</a></li>
+              <li><a class="dropdown-item" href="my-profile.html">Mi perfil</a></li>
+              <li><a onclick="borrarUsuario()" class="dropdown-item" href="">Cerrar sesión</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>`
 };
 
 //Llamamos a la funcion para insertar el dato en la barra de navegacion

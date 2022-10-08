@@ -1,14 +1,21 @@
+function redirigeRelacionados(id) {
+  localStorage.setItem("productID", id)
+  window.location = "product-info.html"
+};
+
 document.addEventListener("DOMContentLoaded", async function () {
 
   //Constantes: contenedores de informacion en el HTML, y ID del producto
   const div_con_info = document.getElementById("infoProduct");
   const div_comments = document.getElementById("divComments");
+  const div_relacionados = document.getElementById("divRelacionados");
   const IDProduct = localStorage.getItem("productID");
 
   //Constantes: informacion del producto
   const urlProduct = `https://japceibal.github.io/emercado-api/products/${IDProduct}.json`;
   const product = await getJSONData(urlProduct);
   const infoProduct = product.data;
+  const relatedProducts = infoProduct.relatedProducts;
 
   //Constantes: array de comentarios, cada uno con su informacion (usuario, fecha, puntaje, etc)
   const urlComments = `https://japceibal.github.io/emercado-api/products_comments/${IDProduct}.json`;
@@ -17,15 +24,15 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
   //Funcion para recorrer array de imagenes del producto
-  function imagenes() {
+  function imagenes(arrayProductos, arrayImagenes) {
 
     let imagenes = ""
-    for (let image of infoProduct.images) {
+    for (let image of arrayImagenes) {
 
       imagenes +=
         `<div class="col">
-        <img class="img-fluid col-11 rounded-circle shadow" src="${image}" alt="${infoProduct.name}">
-      </div>`;
+          <img class="img-fluid col-11 rounded-circle shadow" src="${image}" alt="${arrayProductos.name}">
+        </div>`;
     };
 
     return imagenes;
@@ -60,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       <div>
         <strong class="text-success">Imágenes ilustrativas</strong>
         <div class="d-flex mt-3">
-        ${imagenes()}
+          ${imagenes(infoProduct, infoProduct.images)}
         </div>
       </div>
     </div>
@@ -68,10 +75,14 @@ document.addEventListener("DOMContentLoaded", async function () {
   };
 
   //Funcion que recorre array de comentarios y crea el HTML con los datos de cada uno
-  function HTMLComments() {
+  function HTMLComments(array) {
 
-    let comentarios = "";
-    for (let comment of arrayComments) {
+    let comentarios = `
+    <div class="bg-success text-white rounded">
+      <h5 class="p-1">Comentarios</h5>
+    </div>`;
+
+    for (let comment of array) {
       comentarios +=
         `
     <div class="rounded border p-2">
@@ -79,14 +90,18 @@ document.addEventListener("DOMContentLoaded", async function () {
       <p>${comment.description}</p>
     </div>
     `
-    };    
+    };
+
+    if (arrayComments == "") {
+      comentarios = "";
+    };
 
     return comentarios;
-  
+
   };
 
   //Funcion para representar puntuacion de los comentarios en formato de estrellas
-  function puntaje(score){
+  function puntaje(score) {
 
     let estrellaVacia = `<span class="fa fa-star"></span>`;
     let estrellaCompleta = `<span class="fa fa-star checked"></span>`;
@@ -105,12 +120,30 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   };
 
+  //Funcion que recorre array de productos relacionados y crea el HTML con nombre e imagen de cada uno
+  function HTMLProdRelacionados(array) {
+
+    let prodRelacionados = "";
+
+    for (let product of array) {
+      prodRelacionados +=`
+      <div onclick ="redirigeRelacionados(${product.id})" class="m-2 cursor-active">
+          <img class="mt-2 list-group-item-action imf-fluid col-11 rounded-circle shadow" src="${product.image}" alt="${product.name}">
+        <p class="mt-2">${product.name}</p>
+      </div>`
+    };
+
+    return prodRelacionados;
+
+  };
+
   //Funcion que inserta el HTML con info del producto, e info de los comentarios, de manera dinamica
   function infoYCommentsProduct() {
 
     if (IDProduct) {
       div_con_info.innerHTML = HTMLProduct(infoProduct);
-      div_comments.innerHTML = HTMLComments();
+      div_comments.innerHTML = HTMLComments(arrayComments);
+      div_relacionados.innerHTML = HTMLProdRelacionados(relatedProducts);
     };
 
   };
