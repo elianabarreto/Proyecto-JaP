@@ -38,8 +38,65 @@
   </nav>
   <main>
     <div class="container">
-      <div class="alert alert-danger text-center" role="alert">
-        <h4 class="alert-heading">Funcionalidad en desarrollo</h4>
+      <div class="text-center p-4">
+        <h2>Carrito de compras</h2>
+      </div>
+      <div class="row">
+        <div class="col-6 list-group-item m-2 p-3 shadow rounded">
+          <p>Articulos a comprar</p>
+          <table class="">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Nombre</th>
+                <th>Costo</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody id="tablaCarrito">
+              
+            </tbody>
+          </table>
+        </div>
+        <div class="col-5 list-group-item m-2 p-3 shadow rounded">
+          <p>Datos de envío</p>
+          <fieldset>
+            <legend>Tipo de envío</legend>
+            <ul class="">
+              <li class="list-group-item">
+                <input type="radio" id="premium" name="tipoEnvio" value="premium" checked>
+                <label for="premium">Premium 2 a 5 días (15%)</label>
+              </li>
+              <li class="list-group-item">
+                <input type="radio" id="express" name="tipoEnvio" value="express">
+                <label for="express">Express 5 a 8 días (7%)</label>
+              </li>
+              <li class="list-group-item">
+                <input type="radio" id="standard" name="tipoEnvio" value="standard">
+                <label for="standard">Standard 12 a 15 días (5%)</label>
+              </li>
+            </ul>
+          </fieldset>
+          <fieldset class="d-inline-flex flex-wrap container">
+            <legend>Dirección de envío</legend>
+            <div class="col-6">
+              <label for="calle">Calle</label>
+              <br />
+              <input type="text" name="calle" id="calle">
+            </div>
+            <div class="">
+              <label for="numero">Número</label>
+              <br />
+              <input type="text" name="numero" id="numero">
+            </div>
+            <div class="col-6">
+              <label for="esquina">Esquina</label>
+              <br />
+              <input type="text" name="esquina" id="esquina">
+            </div>
+          </fieldset>
+        </div>
       </div>
     </div>
   </main>

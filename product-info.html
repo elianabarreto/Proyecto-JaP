@@ -38,30 +38,34 @@
     </div>
   </nav>
   <main class="container rounded">
-    <div id="infoProduct" class="container list-group-item m-2 p-3">
+    <div id="infoProduct" class="container list-group-item m-2 p-3 shadow rounded">
     </div>
-    <div class="container list-group-item m-2 p-3 form-control">
-      <div id="divComments">
-      </div>
-      <div class="bg-success text-white rounded mt-2">
-        <h5 class="p-1">Comentar</h5>
-      </div>
-      <div>
-        <p class="mb-1 text-success"><strong>Tu opinión:</strong></p>
-        <textarea class="rounded" name="textarea" id="textarea" cols="60" rows="4"></textarea>
-      </div>
-      <div>
-        <p class="mb-1 text-success"><strong>Tu puntuación:</strong></p>
-        <select class="rounded w-25 p-2" name="select" id="select">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
-      </div>
-      <div>
-        <button class="mt-3 w-10 btn btn-primary" type="submit">Enviar</button>
+    <div class="container list-group-item m-2 p-4 form-control shadow">
+      <div class="row">
+        <div class="col-6" id="divComments">
+        </div>
+        <div class="col-6">
+          <div class="bg-success text-white rounded">
+            <h5 class="p-1">Comentar</h5>
+          </div>
+          <div>
+            <p class="mb-1 text-success"><strong>Tu opinión:</strong></p>
+            <textarea class="rounded d-auto" name="textarea" id="textarea" cols="50" rows="4"></textarea>
+          </div>
+          <div>
+            <p class="mb-1 text-success"><strong>Tu puntuación:</strong></p>
+            <select class="rounded w-25 p-2 cursor-active" name="select" id="select">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+          <div>
+            <button class="mt-3 w-100 btn btn-primary" type="submit">Enviar</button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="container list-group-item m-2 p-3 form-control">

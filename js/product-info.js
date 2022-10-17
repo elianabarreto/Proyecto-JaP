@@ -22,57 +22,91 @@ document.addEventListener("DOMContentLoaded", async function () {
   const comments = await getJSONData(urlComments);
   const arrayComments = comments.data;
 
+  //Funcion que recorre array de imagenes del producto y las inserta en carousel de Bootstrap
+  function imagenes(producto, arrayImagenes) {
 
-  //Funcion para recorrer array de imagenes del producto
-  function imagenes(arrayProductos, arrayImagenes) {
+    let imagenes = `<div class="carousel-item active">
+                      <img src="img/prod${IDProduct}_1.jpg" class="d-block w-100" alt="${producto.name}">
+                    </div>`
 
-    let imagenes = ""
-    for (let image of arrayImagenes) {
-
+    for (let i = 1; i < arrayImagenes.length; i++) {
+      
       imagenes +=
-        `<div class="col">
-          <img class="img-fluid col-11 rounded-circle shadow" src="${image}" alt="${arrayProductos.name}">
-        </div>`;
-    };
+         `<div class="carousel-item">
+            <img src="${arrayImagenes[i]}" class="d-block w-100" alt="${producto.name}">
+          </div>`;
+      
+    }
 
     return imagenes;
 
   };
 
   //Funcion para crear elementos HTML con datos del producto
-  function HTMLProduct(producto) {
+  function HTMLProduct(producto, arrayImagenes) {
     return `
-    <div class="container">
-      <div class="bg-success text-white rounded">
-        <h3 class="p-1">${producto.name}</h3>
+    <div class="container row">
+      <div class="col-5">
+        <div class="bg-success text-white rounded">
+          <h3 class="p-1">${producto.name}</h3>
+        </div>
+        <hr />
+        <div>
+          <strong class="text-success">Precio</strong>
+          <p>${producto.currency} ${producto.cost}</p>
+        </div>
+        <div>
+          <strong class="text-success">Descripción</strong>
+          <p>${producto.description}</p>
+        </div>
+        <div>
+          <strong class="text-success">Categoría</strong>
+          <p>${producto.category}</p>
+        </div>
+        <div>
+          <strong class="text-success">Cantidad de vendidos</strong>
+          <p>${producto.soldCount}</p>
+          <hr class="p-0"/>
+        </div>
+        <div>
+          <button id="btnComprar" class="w-100 btn btn-primary">Comprar</button>
+        </div>
       </div>
-      <hr />
-      <div>
-        <strong class="text-success">Precio</strong>
-        <p>${producto.currency} ${producto.cost}</p>
-      </div>
-      <div>
-        <strong class="text-success">Descripción</strong>
-        <p>${producto.description}</p>
-      </div>
-      <div>
-        <strong class="text-success">Categoría</strong>
-        <p>${producto.category}</p>
-      </div>
-      <div>
-        <strong class="text-success">Cantidad de vendidos</strong>
-        <p>${producto.soldCount}</p>
-        <hr class="p-0"/>
-      </div>
-      <div>
-        <strong class="text-success">Imágenes ilustrativas</strong>
-        <div class="d-flex mt-3">
-          ${imagenes(infoProduct, infoProduct.images)}
+      <div class="col-5 w-50 m-auto">
+        <div id="carouselExampleIndicators" class="carousel slide align" data-bs-ride="carousel">
+          <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 3"></button>
+          </div>
+          <div class="carousel-inner">
+          ${imagenes(producto, arrayImagenes)}
+          </div>
+          <button class="carousel-control-prev bg-success" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next bg-success" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
         </div>
       </div>
     </div>
     `
   };
+
+  
+/*   let productosComprados = []
+  //Evento para agregar producto al carrito
+  document.getElementById("btnComprar").addEventListener("click", () =>{
+
+    
+
+
+
+  }); */
 
   //Funcion que recorre array de comentarios y crea el HTML con los datos de cada uno
   function HTMLComments(array) {
@@ -126,7 +160,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     let prodRelacionados = "";
 
     for (let product of array) {
-      prodRelacionados +=`
+      prodRelacionados += `
       <div onclick ="redirigeRelacionados(${product.id})" class="m-2 cursor-active">
           <img class="mt-2 list-group-item-action imf-fluid col-11 rounded-circle shadow" src="${product.image}" alt="${product.name}">
         <p class="mt-2">${product.name}</p>
@@ -141,7 +175,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   function infoYCommentsProduct() {
 
     if (IDProduct) {
-      div_con_info.innerHTML = HTMLProduct(infoProduct);
+      div_con_info.innerHTML = HTMLProduct(infoProduct, infoProduct.images);
       div_comments.innerHTML = HTMLComments(arrayComments);
       div_relacionados.innerHTML = HTMLProdRelacionados(relatedProducts);
     };
