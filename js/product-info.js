@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const product = await getJSONData(urlProduct);
   const infoProduct = product.data;
   const relatedProducts = infoProduct.relatedProducts;
+  console.log(infoProduct);
 
   //Constantes: array de comentarios, cada uno con su informacion (usuario, fecha, puntaje, etc)
   const urlComments = `https://japceibal.github.io/emercado-api/products_comments/${IDProduct}.json`;
@@ -30,13 +31,13 @@ document.addEventListener("DOMContentLoaded", async function () {
                     </div>`
 
     for (let i = 1; i < arrayImagenes.length; i++) {
-      
+
       imagenes +=
-         `<div class="carousel-item">
+        `<div class="carousel-item">
             <img src="${arrayImagenes[i]}" class="d-block w-100" alt="${producto.name}">
           </div>`;
-      
-    }
+
+    };
 
     return imagenes;
 
@@ -97,16 +98,27 @@ document.addEventListener("DOMContentLoaded", async function () {
     `
   };
 
-  
-/*   let productosComprados = []
-  //Evento para agregar producto al carrito
-  document.getElementById("btnComprar").addEventListener("click", () =>{
-
+    function agregarProducto(producto) {
     
+      let carrito = {};
+  
+      if (localStorage.getItem("Carrito")) {
+        carrito = JSON.parse(localStorage.getItem("Carrito"));
+      };
+  
+      carrito[producto.id] = {
+        id: producto.id,
+        name: producto.name,
+        unitCost: producto.cost,
+        currency: producto.currency,
+        count: 1,
+        image: producto.images[0]
+      };
+  
+      localStorage.setItem("Carrito", JSON.stringify(carrito));
+  
+    };
 
-
-
-  }); */
 
   //Funcion que recorre array de comentarios y crea el HTML con los datos de cada uno
   function HTMLComments(array) {
@@ -127,7 +139,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     };
 
     if (arrayComments == "") {
-      comentarios = "";
+      comentarios = `
+      <div class="rounded border p-2">
+        <p><strong class="text-success">No hay comentarios, ¡Sé el primero!</p>
+      </div>`;
     };
 
     return comentarios;
@@ -178,6 +193,13 @@ document.addEventListener("DOMContentLoaded", async function () {
       div_con_info.innerHTML = HTMLProduct(infoProduct, infoProduct.images);
       div_comments.innerHTML = HTMLComments(arrayComments);
       div_relacionados.innerHTML = HTMLProdRelacionados(relatedProducts);
+
+      document.getElementById("btnComprar").addEventListener("click", () => {
+
+        agregarProducto(infoProduct);
+        window.location = "cart.html"
+
+      });
     };
 
   };

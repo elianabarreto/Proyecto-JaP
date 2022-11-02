@@ -211,3 +211,7 @@ a.custom-card:hover {
 .imgBox {
   width: 100%;
 }
+
+.sinBorde {
+  border: none;
+}
