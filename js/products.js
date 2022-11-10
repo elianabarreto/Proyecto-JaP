@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   let btnPrecioAsc = document.getElementById("sortAsc");
   let btnRelevanciaDesc = document.getElementById("sortByCount");
   let btnLimpiar = document.getElementById("clearRangeFilter");
+  let buscador = document.getElementById("buscador");
 
   let array = [];
   let inputPrecioMin = document.getElementById("rangeFilterCountMin");
@@ -164,6 +165,18 @@ document.addEventListener("DOMContentLoaded", async function () {
     min = undefined;
     max = undefined;
     mostrarListaProductos();
+  });
+
+  buscador.addEventListener("input", () => {
+    listado.innerHTML = "";
+
+    for (let producto of arrayProductos) {
+      if (producto.name.toLowerCase().includes(buscador.value.toLowerCase())||producto.description.toLowerCase().includes(buscador.value.toLowerCase())) {
+
+        listado.innerHTML += infoProductHTML(producto)
+      };
+
+    };
   });
 
 });
