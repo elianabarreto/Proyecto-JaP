@@ -167,11 +167,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     mostrarListaProductos();
   });
 
+  //Buscador en tiempo real
   buscador.addEventListener("input", () => {
     listado.innerHTML = "";
 
     for (let producto of arrayProductos) {
-      if (producto.name.toLowerCase().includes(buscador.value.toLowerCase())||producto.description.toLowerCase().includes(buscador.value.toLowerCase())) {
+      if (producto.name.toLowerCase().includes(buscador.value.toLowerCase()) || producto.description.toLowerCase().includes(buscador.value.toLowerCase())) {
 
         listado.innerHTML += infoProductHTML(producto)
       };

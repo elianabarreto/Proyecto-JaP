@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const product = await getJSONData(urlProduct);
   const infoProduct = product.data;
   const relatedProducts = infoProduct.relatedProducts;
-  console.log(infoProduct);
 
   //Constantes: array de comentarios, cada uno con su informacion (usuario, fecha, puntaje, etc)
   const urlComments = `https://japceibal.github.io/emercado-api/products_comments/${IDProduct}.json`;
@@ -98,14 +97,22 @@ document.addEventListener("DOMContentLoaded", async function () {
     `
   };
 
-    function agregarProducto(producto) {
-    
-      let carrito = {};
-  
-      if (localStorage.getItem("Carrito")) {
-        carrito = JSON.parse(localStorage.getItem("Carrito"));
-      };
-  
+  //Funcion para agregar producto al carrito, evalua, si ya esta en localStorage modifica su cantidad
+  function agregarProducto(producto) {
+
+    let carrito = {};
+
+    if (localStorage.getItem("Carrito")) {
+      carrito = JSON.parse(localStorage.getItem("Carrito"));
+    };
+
+    if (carrito[producto.id]) {
+
+      carrito[producto.id].count++
+
+      localStorage.setItem("Carrito", JSON.stringify(carrito));
+    } else {
+
       carrito[producto.id] = {
         id: producto.id,
         name: producto.name,
@@ -114,38 +121,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         count: 1,
         image: producto.images[0]
       };
-  
+
       localStorage.setItem("Carrito", JSON.stringify(carrito));
-  
     };
-
-
-  //Funcion que recorre array de comentarios y crea el HTML con los datos de cada uno
-  function HTMLComments(array) {
-
-    let comentarios = `
-    <div class="bg-success text-white rounded">
-      <h5 class="p-1">Comentarios</h5>
-    </div>`;
-
-    for (let comment of array) {
-      comentarios +=
-        `
-    <div class="rounded border p-2">
-      <p><strong class="text-success">${comment.user}</strong> - ${comment.dateTime} - ${puntaje(comment.score)}</p>
-      <p>${comment.description}</p>
-    </div>
-    `
-    };
-
-    if (arrayComments == "") {
-      comentarios = `
-      <div class="rounded border p-2">
-        <p><strong class="text-success">No hay comentarios, ¡Sé el primero!</p>
-      </div>`;
-    };
-
-    return comentarios;
 
   };
 
@@ -186,18 +164,59 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   };
 
+  //Funcion que recorre array de comentarios y crea el HTML con los datos de cada uno. Recorre y muestra los del servidor, y si hay en el localStorage tambien.
+  function comentariosDinamicos(arrayServidor, arrayStorage) {
+
+    let comentarios = `
+    <div class="bg-success text-white rounded">
+      <h5 class="p-1">Comentarios</h5>
+    </div>`;
+
+    for (let comment of arrayServidor) {
+      comentarios +=
+        `
+    <div class="rounded border p-2">
+      <p><strong class="text-success">${comment.user}</strong> - ${comment.dateTime} - ${puntaje(comment.score)}</p>
+      <p>${comment.description}</p>
+    </div>
+    `
+    };
+
+    if (localStorage.getItem(`Comentarios${IDProduct}`)) {
+
+      for (let comment of arrayStorage) {
+        comentarios +=
+          `
+      <div class="rounded border p-2">
+        <p><strong class="text-success">${comment.user}</strong> - ${comment.dateTime} - ${puntaje(comment.score)}</p>
+        <p>${comment.description}</p>
+      </div>
+      `
+      };
+
+    };
+
+    if (arrayServidor == "" && arrayStorage == undefined) {
+      comentarios += `
+      <div class="rounded border p-2">
+        <p><strong class="text-success">No hay comentarios, ¡Sé el primero!</p>
+      </div>`;
+    };
+
+    return comentarios;
+  };
+
   //Funcion que inserta el HTML con info del producto, e info de los comentarios, de manera dinamica
   function infoYCommentsProduct() {
 
     if (IDProduct) {
       div_con_info.innerHTML = HTMLProduct(infoProduct, infoProduct.images);
-      div_comments.innerHTML = HTMLComments(arrayComments);
+      div_comments.innerHTML = comentariosDinamicos(arrayComments, JSON.parse(localStorage.getItem(`Comentarios${IDProduct}`)));
       div_relacionados.innerHTML = HTMLProdRelacionados(relatedProducts);
 
       document.getElementById("btnComprar").addEventListener("click", () => {
 
         agregarProducto(infoProduct);
-        window.location = "cart.html"
 
       });
     };
@@ -205,5 +224,33 @@ document.addEventListener("DOMContentLoaded", async function () {
   };
 
   infoYCommentsProduct();
+
+  document.getElementById("btnEnviar").addEventListener("click", () => {
+
+    let usuarioPagina = localStorage.getItem("Usuario");
+    let opinionTextarea = document.getElementById("opinionTextarea").value;
+    let selectPuntuacion = document.getElementById("selectPuntuacion").value;
+    let hoy = new Date();
+    let fechaHoy = `${hoy.getFullYear()}-${hoy.getMonth() + 1}-${hoy.getDate()} ${hoy.toLocaleTimeString()}`
+
+    let comentarios = JSON.parse(localStorage.getItem(`Comentarios${IDProduct}`)) || [];
+
+    if (comentarios) {
+
+      let nuevoComentario = {
+        product: IDProduct,
+        score: selectPuntuacion,
+        description: opinionTextarea,
+        user: usuarioPagina,
+        dateTime: fechaHoy
+      };
+
+      comentarios.push(nuevoComentario);
+      localStorage.setItem(`Comentarios${IDProduct}`, JSON.stringify(comentarios));
+    };
+
+    div_comments.innerHTML = comentariosDinamicos(arrayComments, JSON.parse(localStorage.getItem(`Comentarios${IDProduct}`)));
+
+  });
 
 });
