@@ -51,12 +51,59 @@
       </div>
     </div>
   </nav>
-  <main>
-    <div class="container">
-      <div class="alert alert-danger text-center" role="alert">
-        <h4 class="alert-heading">Funcionalidad en desarrollo</h4>
+  <main class="container col-8 rounded">
+    <form id="formPerfil" class="list-group-item mt-4 needs-validation" novalidate>
+        <div class="bg-success text-white rounded mb-2">
+          <h5 class="my-auto p-1">Perfil</h5>
+        </div>
+        <div class="col-2 float-end mt-2">
+          <img id="imgPerfil" src="img/img_perfil.png" alt="Imagen de perfil" class="img-thumbnail">
+        </div>
+      <div class="row">
+        <div class="col-6">
+          <label for="primerNombre">Primer nombre *</label>
+          <input type="text" class="form-control" id="primerNombre">
+          <div class="invalid-feedback">
+            Este campo no puede estar vacío.
+          </div>
+        </div>
+        <div class="col-6">
+          <label for="segundoNombre">Segundo nombre</label>
+          <input type="text" class="form-control" id="segundoNombre">
+        </div>
       </div>
-    </div>
+      <div class="row">
+        <div class="col-6">
+          <label for="primerApellido">Primer apellido *</label>
+          <input type="text" class="form-control" id="primerApellido">
+          <div class="invalid-feedback">
+            Este campo no puede estar vacío.
+          </div>
+        </div>
+        <div class="col-6">
+          <label for="segundoApellido">Segundo apellido</label>
+          <input type="text" class="form-control" id="segundoApellido">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <label for="email">E-mail *</label>
+          <input type="email" class="form-control" id="email">
+        </div>
+        <div class="col-6">
+          <label for="telContacto">Teléfono de contacto</label>
+          <input type="text" class="form-control" id="telContacto">
+        </div>
+        <div class="col-6">
+          <label for="inputFile">Imágen de perfil</label>
+          <input type="file" class="form-control" id="inputFile">
+        </div>
+      </div>
+      <hr class="mt-5"/>
+      <div>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+      </div>
+    </form>
   </main>
   <footer class="text-muted">
     <div class="container">

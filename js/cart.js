@@ -1,105 +1,122 @@
-document.addEventListener("DOMContentLoaded", async function () {
+const carrito_tbody = document.getElementById("carrito_tbody");
 
-    const carrito_tbody = document.getElementById("carrito");
+//Funcion que evalua, si la moneda del producto es "UYU", hace la conversion a dolares
+function convertirMoneda(currency, cost, cantidad) {
+    if (currency === "UYU") {
+        let montoUSD = cost / 42;
+        let total = montoUSD * cantidad
+        return Math.round(total);
+    } else {
+        return cost * cantidad
+    };
+};
+
+//Funcion para crear contenido HTML que se inserta dentro del tbody del carrito
+function HTMLCarrito(articuloServidor, articulosStorage) {
+
+    let carro = `
+    <tr id="tr${articuloServidor.id}">
+      <td class="col-md-2 p-1"><img src="${articuloServidor.image}" class="img-fluid rounded-pill" alt="${articuloServidor.name}"></td>
+      <td class="col-md-2 p-1">${articuloServidor.name}</td>
+      <td class="col-md-2 p-1">${articuloServidor.currency} <span id="precioUnidad${articuloServidor.id}">${convertirMoneda(articuloServidor.currency, articuloServidor.unitCost, 1)}</span></td>
+      <td class="col-md-2 p-1"><input class="form-control" id="inputCantidad${articuloServidor.id}" type="number" value="${articuloServidor.count}" min="1" class="w-50"></td>
+      <td class="col-md-2 p-1">${articuloServidor.currency} <span id="subtotal${articuloServidor.id}">${convertirMoneda(articuloServidor.currency, articuloServidor.unitCost, articuloServidor.count)}</span></td>
+      <td class="col-md-1"><button id="btn${articuloServidor.id}" class="btn btn-danger" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+      <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+    </svg></button></td>
+    </tr>
+    `;
+
+    for (let articulo of Object.values(articulosStorage)) {
+        carro += `
+        <tr id="tr${articulo.id}">
+          <td class="col-md-2 p-1"><img src="${articulo.image}" class="img-fluid rounded-pill" alt="${articulo.name}"></td>
+          <td class="col-md-2 p-1">${articulo.name}</td>
+          <td class="col-md-2 p-1">USD <span id="precioUnidad${articulo.id}">${convertirMoneda(articulo.currency, articulo.unitCost, 1)}</span></td>
+          <td class="col-md-2 p-1"><input class="form-control" id="inputCantidad${articulo.id}" type="number" value="${articulo.count}" min="1" class="w-50"></td>
+          <td class="col-md-2 p-1">USD <span id="subtotal${articulo.id}">${convertirMoneda(articulo.currency, articulo.unitCost, articulo.count)}</span></td>
+          <td class="col-md-1"><button id="btn${articulo.id}" class="btn btn-danger" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+          <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+        </svg></button></td>
+        </tr>
+        `
+    };
+
+    return carro;
+};
+
+//Funcion para eliminar producto del carrito
+function eliminarProducto(articuloServidor, articulosStorage) {
+
+    let btnEliminar1 = document.getElementById(`btn${articuloServidor.id}`);
+
+    //Evento al boton del PRODUCTO QUE VIENE DEL SERVIDOR
+    btnEliminar1.addEventListener("click", () => {
+        document.getElementById(`tr${articuloServidor.id}`).remove();
+    });
+
+    //Iteramos los productos del localStorage
+    for (let articulo of Object.values(articulosStorage)) {
+
+        let btnEliminar2 = document.getElementById(`btn${articulo.id}`);
+
+        //y le damos un evento al boton de cada producto
+        btnEliminar2.addEventListener("click", () => {
+            let carrito = JSON.parse(localStorage.getItem("Carrito"));
+            delete carrito[articulo.id];
+            localStorage.setItem("Carrito", JSON.stringify(carrito));
+            document.getElementById(`tr${articulo.id}`).remove();
+        });
+    };
+};
+
+//Funcion para sumar los valores de los subtotales de los productos en carrito, del servidor y del localStorage
+function sumaSubtotalesProductos(articuloServidor, articulosStorage) {
+
+    let subtotalServidor = document.getElementById(`subtotal${articuloServidor.id}`);
+    let suma = parseInt(subtotalServidor.textContent);
+
+    for (let articulo of Object.values(articulosStorage)) {
+        let subtotalStorage = document.getElementById(`subtotal${articulo.id}`);
+        suma += parseInt(subtotalStorage.textContent)
+    };
+
+    return suma;
+};
+
+document.addEventListener("DOMContentLoaded", async function () {
 
     //Solicitud al servidor, para traer articulo precargado al carrito
     const url = "https://japceibal.github.io/emercado-api/user_cart/25801.json";
     const info_carrito = await getJSONData(url);
     const articulo_carrito = info_carrito.data.articles;
 
-    //Traemos lo que tenemos en localStorage
-    const infoStorage = JSON.parse(localStorage.getItem("Carrito"));
-
-    function convertirMoneda(currency, cost) {
-
-        if (currency === "UYU") {
-            let total = cost / 42;
-            return Math.round(total);
-        } else {
-            return cost
-        };
-    };
-
-    //Funcion para crear contenido HTML que se inserta dentro del tbody del carrito
-    function HTMLCarrito(articuloServidor, articulosStorage) {
-
-        let carro = `
-        <tr>
-          <td class="col-md-2 p-1"><img src="${articuloServidor.image}" class="img-fluid rounded-pill" alt="${articuloServidor.name}"></td>
-          <td class="col-md-2 p-1">${articuloServidor.name}</td>
-          <td class="col-md-2 p-1">${articuloServidor.currency} <span id="precioUnidad${articuloServidor.id}">${convertirMoneda(articuloServidor.currency, articuloServidor.unitCost)}</span></td>
-          <td class="col-md-2 p-1"><input class="form-control" id="inputCantidad${articuloServidor.id}" type="number" value="${articuloServidor.count}" min="1" class="w-50"></td>
-          <td class="col-md-2 p-1">${articuloServidor.currency} <span id="subtotal${articuloServidor.id}">${convertirMoneda(articuloServidor.currency, articuloServidor.unitCost)}</span></td>
-        </tr>
-        `;
-
-        for (let articulo of Object.values(articulosStorage)) {
-            carro += `
-            <tr>
-              <td class="col-md-2 p-1"><img src="${articulo.image}" class="img-fluid rounded-pill" alt="${articulo.name}"></td>
-              <td class="col-md-2 p-1">${articulo.name}</td>
-              <td class="col-md-2 p-1">USD <span id="precioUnidad${articulo.id}">${convertirMoneda(articulo.currency, articulo.unitCost)}</span></td>
-              <td class="col-md-2 p-1"><input class="form-control" id="inputCantidad${articulo.id}" type="number" value="${articulo.count}" min="1" class="w-50"></td>
-              <td class="col-md-2 p-1">USD <span id="subtotal${articulo.id}">${convertirMoneda(articulo.currency, articulo.unitCost)}</span></td>
-            </tr>
-            `
-        };
-
-        return carro;
-    };
-
-    //Funcion para sumar los valores de los subtotales de los productos en carrito, del servidor y del localStorage
-    function sumaSubtotalesProductos(articuloServidor, articulosStorage) {
-
-        let subtotal = document.getElementById(`subtotal${articuloServidor.id}`);
-        let suma = parseInt(subtotal.textContent);
-
-        for (let articulo of Object.values(articulosStorage)) {
-
-            let subtotal2 = document.getElementById(`subtotal${articulo.id}`);
-            suma += parseInt(subtotal2.textContent)
-        };
-
-        return suma;
-    };
-
-    let subtotalGeneral = document.getElementById("subtotal");
+    let subtotalGeneral = document.getElementById("subtotalGeneral");
     let total = document.getElementById("total");
     let costoEnvio = document.getElementById("costoEnvio");
     let btnPremium = document.getElementById("premium");
     let btnExpress = document.getElementById("express");
     let btnStandard = document.getElementById("standard");
 
-    //Funcion para calcular el costo de envio, segun input seleccionado
-    function costoDeEnvio() {
-
-        if (btnPremium.checked) {
-            costoEnvio.innerHTML = Math.round(parseInt(subtotalGeneral.textContent) * 0.15);
-            total.innerHTML = parseInt(subtotalGeneral.textContent) + parseInt(costoEnvio.textContent);
-        };
-
-        if (btnExpress.checked) {
-            costoEnvio.innerHTML = Math.round(parseInt(subtotalGeneral.textContent) * 0.07);
-            total.innerHTML = parseInt(subtotalGeneral.textContent) + parseInt(costoEnvio.textContent);
-        };
-
-        if (btnStandard.checked) {
-            costoEnvio.innerHTML = Math.round(parseInt(subtotalGeneral.textContent) * 0.05);
+    //Funcion para calcular segun input seleccionado, el porcentaje correspondiente
+    function porcentajeCostoEnvio(inputRadio, porcentaje) {
+        if (inputRadio.checked) {
+            costoEnvio.innerHTML = Math.round(parseInt(subtotalGeneral.textContent) * porcentaje);
             total.innerHTML = parseInt(subtotalGeneral.textContent) + parseInt(costoEnvio.textContent);
         };
     };
 
-    // Eventos a inputs radio de costo envio
+    //Eventos a inputs radio de costo envio
     btnPremium.addEventListener("input", () => {
-        costoDeEnvio();
+        porcentajeCostoEnvio(btnPremium, 0.15);
     });
 
     btnExpress.addEventListener("input", () => {
-        costoDeEnvio();
+        porcentajeCostoEnvio(btnExpress, 0.07);
     });
 
     btnStandard.addEventListener("input", () => {
-        costoDeEnvio();
+        porcentajeCostoEnvio(btnStandard, 0.05);
     });
 
     //CAMBIAR NOMBRE DE FUNCION
@@ -113,11 +130,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         subtotalGeneral.innerHTML = sumaSubtotalesProductos(articuloServidor, articulosStorage)
 
         inputCantidad.addEventListener("input", () => {
-
             subtotal.innerHTML = inputCantidad.value * parseInt(precioUnidad.textContent);
             subtotalGeneral.innerHTML = sumaSubtotalesProductos(articuloServidor, articulosStorage);
-            costoDeEnvio();
-
+            porcentajeCostoEnvio(btnPremium, 0.15)
+            porcentajeCostoEnvio(btnExpress, 0.07);
+            porcentajeCostoEnvio(btnStandard, 0.05);
         });
 
         for (let articulo of Object.values(articulosStorage)) {
@@ -126,16 +143,16 @@ document.addEventListener("DOMContentLoaded", async function () {
             let inputCantidad2 = document.getElementById(`inputCantidad${articulo.id}`);
             let subtotal2 = document.getElementById(`subtotal${articulo.id}`);
 
-            inputCantidad2.addEventListener("input", () => {
+            subtotal2.innerHTML = inputCantidad2.value * parseInt(precioUnidad2.textContent);
 
+            inputCantidad2.addEventListener("input", () => {
                 subtotal2.innerHTML = inputCantidad2.value * parseInt(precioUnidad2.textContent);
                 subtotalGeneral.innerHTML = sumaSubtotalesProductos(articuloServidor, articulosStorage);
-                costoDeEnvio();
-
+                porcentajeCostoEnvio(btnPremium, 0.15)
+                porcentajeCostoEnvio(btnExpress, 0.07);
+                porcentajeCostoEnvio(btnStandard, 0.05);
             });
-
         };
-
     };
 
     let tarjetaCredito = document.getElementById("tarjetaCredito");
@@ -147,9 +164,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     let inputNumCuenta = document.getElementById("inputNumCuenta");
 
     function desactivarCamposModal() {
-
         tarjetaCredito.addEventListener("click", () => {
-
             if (tarjetaCredito.checked) {
                 inputNumTarjeta.disabled = false
                 inputCodeTarjeta.disabled = false
@@ -157,11 +172,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                 inputNumCuenta.disabled = true
             };
-
         });
 
         transferencia.addEventListener("click", () => {
-
             if (transferencia.checked) {
                 inputNumTarjeta.disabled = true
                 inputCodeTarjeta.disabled = true
@@ -169,22 +182,20 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                 inputNumCuenta.disabled = false
             };
-
         });
-
     };
 
     desactivarCamposModal();
 
     //Procedimiento que imprime toda la informacion necesaria en pantalla
     function productosCarrito() {
-        carrito_tbody.innerHTML = HTMLCarrito(articulo_carrito[0], infoStorage);
-        subtotalProductoYsubtotalGeneral(articulo_carrito[0], infoStorage)
+        carrito_tbody.innerHTML = HTMLCarrito(articulo_carrito[0], JSON.parse(localStorage.getItem("Carrito")));
+        subtotalProductoYsubtotalGeneral(articulo_carrito[0], JSON.parse(localStorage.getItem("Carrito")))
     };
 
     productosCarrito();
-
-    ;
+    eliminarProducto(articulo_carrito[0], JSON.parse(localStorage.getItem("Carrito")));
+    //VER------------------------------------
 
     //Validaciones del formulario
     const formulario = document.getElementById("formulario");
@@ -196,7 +207,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     let validar = true
 
     formulario.addEventListener("submit", (evento) => {
-
         if (calle.value == "") {
             calle.classList.add("is-invalid");
 
@@ -295,7 +305,5 @@ document.addEventListener("DOMContentLoaded", async function () {
             evento.preventDefault();
             evento.stopPropagation();
         };
-
     });
-
 });
