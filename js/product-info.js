@@ -45,13 +45,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   //Funcion para crear elementos HTML con datos del producto
   function HTMLProduct(producto, arrayImagenes) {
     return `
-    <div class="container row">
-      <div class="col-5">
+    <div class="row px-2">
         <div class="bg-success text-white rounded">
-          <h3 class="p-1">${producto.name}</h3>
+          <h3 class="pt-1">${producto.name}</h3>
         </div>
-        <hr />
-        <div>
+      <div class="col-12 col-lg-5">
+        <div class="mt-2">
           <strong class="text-success">Precio</strong>
           <p>${producto.currency} ${producto.cost}</p>
         </div>
@@ -66,13 +65,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         <div>
           <strong class="text-success">Cantidad de vendidos</strong>
           <p>${producto.soldCount}</p>
-          <hr class="p-0"/>
-        </div>
-        <div>
-          <button id="btnComprar" class="w-100 btn btn-primary">Comprar</button>
         </div>
       </div>
-      <div class="col-5 w-50 m-auto">
+      <div class="col-12 col-lg-5 col-md-8 w-md-50 m-auto">
         <div id="carouselExampleIndicators" class="carousel slide align" data-bs-ride="carousel">
           <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -93,6 +88,9 @@ document.addEventListener("DOMContentLoaded", async function () {
           </button>
         </div>
       </div>
+      <div class="mt-3">
+          <button id="btnComprar" class="w-100 btn btn-primary">Comprar</button>
+        </div>
     </div>
     `
   };

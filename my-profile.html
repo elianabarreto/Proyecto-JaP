@@ -51,57 +51,56 @@
       </div>
     </div>
   </nav>
-  <main class="container col-8 rounded">
-    <form id="formPerfil" class="list-group-item mt-4 needs-validation" novalidate>
-        <div class="bg-success text-white rounded mb-2">
-          <h5 class="my-auto p-1">Perfil</h5>
-        </div>
-        <div class="col-2 float-end mt-2">
-          <img id="imgPerfil" src="img/img_perfil.png" alt="Imagen de perfil" class="img-thumbnail">
-        </div>
+  <main class="container-fluid col-md-11 col-lg-8 rounded">
+    <form id="formPerfil" class="list-group-item mt-1 mt-sm-2 mt-md-4 needs-validation" novalidate>
+      <div class="bg-success text-white rounded mb-2">
+        <h5 class="my-auto p-1">Perfil</h5>
+      </div>
       <div class="row">
-        <div class="col-6">
+        <div class="col-12 m-3">
+          <img id="imgPerfil" src="img/img_perfil.png" alt="Imagen de perfil" class="img-thumbnail col-3">
+        </div>
+        <div class="col-11 mx-auto col-md-6 mb-2">
           <label for="primerNombre">Primer nombre *</label>
           <input type="text" class="form-control" id="primerNombre">
           <div class="invalid-feedback">
             Este campo no puede estar vacío.
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-11 mx-auto col-md-6 mb-2">
           <label for="segundoNombre">Segundo nombre</label>
           <input type="text" class="form-control" id="segundoNombre">
         </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
+        <div class="col-11 mx-auto col-md-6 mb-2">
           <label for="primerApellido">Primer apellido *</label>
           <input type="text" class="form-control" id="primerApellido">
           <div class="invalid-feedback">
             Este campo no puede estar vacío.
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-11 mx-auto col-md-6 mb-2">
           <label for="segundoApellido">Segundo apellido</label>
           <input type="text" class="form-control" id="segundoApellido">
         </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
+        <div class="col-11 mx-auto col-md-6 mb-2">
           <label for="email">E-mail *</label>
           <input type="email" class="form-control" id="email">
+          <div class="invalid-feedback">
+            Este campo no puede estar vacío.
+          </div>
         </div>
-        <div class="col-6">
+        <div class="col-11 mx-auto col-md-6 mb-2">
           <label for="telContacto">Teléfono de contacto</label>
           <input type="text" class="form-control" id="telContacto">
         </div>
-        <div class="col-6">
+        <div class="col-11 mx-auto mx-md-0 col-md-6 mb-2">
           <label for="inputFile">Imágen de perfil</label>
           <input type="file" class="form-control" id="inputFile">
         </div>
       </div>
-      <hr class="mt-5"/>
+      <hr class="mt-lg-5" />
       <div>
-        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <button type="submit" class="btn btn-primary col-12">Guardar cambios</button>
       </div>
     </form>
   </main>

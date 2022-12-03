@@ -91,12 +91,22 @@ document.addEventListener("DOMContentLoaded", async function () {
     const info_carrito = await getJSONData(url);
     const articulo_carrito = info_carrito.data.articles;
 
-    let subtotalGeneral = document.getElementById("subtotalGeneral");
-    let total = document.getElementById("total");
-    let costoEnvio = document.getElementById("costoEnvio");
-    let btnPremium = document.getElementById("premium");
-    let btnExpress = document.getElementById("express");
-    let btnStandard = document.getElementById("standard");
+    const subtotalGeneral = document.getElementById("subtotalGeneral");
+    const total = document.getElementById("total");
+    const costoEnvio = document.getElementById("costoEnvio");
+    const btnPremium = document.getElementById("premium");
+    const btnExpress = document.getElementById("express");
+    const btnStandard = document.getElementById("standard");
+
+    //Inputs del modal
+    const tarjetaCredito = document.getElementById("tarjetaCredito");
+    const inputNumTarjeta = document.getElementById("inputNumTarjeta");
+    const inputCodeTarjeta = document.getElementById("inputCodeTarjeta");
+    const inputVencimiento = document.getElementById("inputVencimiento");
+
+    //Inputs radio del modal
+    const transferencia = document.getElementById("transferencia");
+    const inputNumCuenta = document.getElementById("inputNumCuenta");
 
     //Funcion para calcular segun input seleccionado, el porcentaje correspondiente
     function porcentajeCostoEnvio(inputRadio, porcentaje) {
@@ -106,28 +116,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         };
     };
 
-    //Eventos a inputs radio de costo envio
-    btnPremium.addEventListener("input", () => {
-        porcentajeCostoEnvio(btnPremium, 0.15);
-    });
-
-    btnExpress.addEventListener("input", () => {
-        porcentajeCostoEnvio(btnExpress, 0.07);
-    });
-
-    btnStandard.addEventListener("input", () => {
-        porcentajeCostoEnvio(btnStandard, 0.05);
-    });
-
-    //CAMBIAR NOMBRE DE FUNCION
-    //Funcion para calcular subtotales, trae los inputs segun su id, segun provengan del servidor o del localStorage
-    function subtotalProductoYsubtotalGeneral(articuloServidor, articulosStorage) {
+    //Funcion que calcula subtotal de c/producto, trae su input cantidad segun su id, segun provenga del servidor o del localStorage
+    function subtotalProductoYGeneral(articuloServidor, articulosStorage) {
 
         let precioUnidad = document.getElementById(`precioUnidad${articuloServidor.id}`);
         let inputCantidad = document.getElementById(`inputCantidad${articuloServidor.id}`);
         let subtotal = document.getElementById(`subtotal${articuloServidor.id}`);
 
-        subtotalGeneral.innerHTML = sumaSubtotalesProductos(articuloServidor, articulosStorage)
+        subtotalGeneral.innerHTML = sumaSubtotalesProductos(articuloServidor, articulosStorage);
 
         inputCantidad.addEventListener("input", () => {
             subtotal.innerHTML = inputCantidad.value * parseInt(precioUnidad.textContent);
@@ -155,15 +151,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         };
     };
 
-    let tarjetaCredito = document.getElementById("tarjetaCredito");
-    let inputNumTarjeta = document.getElementById("inputNumTarjeta");
-    let inputCodeTarjeta = document.getElementById("inputCodeTarjeta");
-    let inputVencimiento = document.getElementById("inputVencimiento");
-
-    let transferencia = document.getElementById("transferencia");
-    let inputNumCuenta = document.getElementById("inputNumCuenta");
-
+    //Funcion para deshabilitar campos del modal
     function desactivarCamposModal() {
+        inputNumTarjeta.disabled = true
+        inputCodeTarjeta.disabled = true
+        inputVencimiento.disabled = true
+        inputNumCuenta.disabled = true
+
         tarjetaCredito.addEventListener("click", () => {
             if (tarjetaCredito.checked) {
                 inputNumTarjeta.disabled = false
@@ -185,51 +179,54 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     };
 
-    desactivarCamposModal();
-
     //Procedimiento que imprime toda la informacion necesaria en pantalla
     function productosCarrito() {
         carrito_tbody.innerHTML = HTMLCarrito(articulo_carrito[0], JSON.parse(localStorage.getItem("Carrito")));
-        subtotalProductoYsubtotalGeneral(articulo_carrito[0], JSON.parse(localStorage.getItem("Carrito")))
+        subtotalProductoYGeneral(articulo_carrito[0], JSON.parse(localStorage.getItem("Carrito")));
+
+        eliminarProducto(articulo_carrito[0], JSON.parse(localStorage.getItem("Carrito")));
+
+        //Eventos a inputs radio de costo envio
+        btnPremium.addEventListener("input", () => {
+            porcentajeCostoEnvio(btnPremium, 0.15);
+        });
+
+        btnExpress.addEventListener("input", () => {
+            porcentajeCostoEnvio(btnExpress, 0.07);
+        });
+
+        btnStandard.addEventListener("input", () => {
+            porcentajeCostoEnvio(btnStandard, 0.05);
+        });
+
+        desactivarCamposModal();
     };
 
     productosCarrito();
-    eliminarProducto(articulo_carrito[0], JSON.parse(localStorage.getItem("Carrito")));
-    //VER------------------------------------
+
+    //Si el campo especificado se encuentra vacio, agregar a ese input clase "is-invalid" para dar feedback, y paramos el evento de submit del formulario
+    function invalidFeedbackInput(input, evento) {
+        if (input.value == "") {
+            validar = false
+            input.classList.add("is-invalid");
+
+            evento.preventDefault();
+            evento.stopPropagation();
+        };
+    };
 
     //Validaciones del formulario
-    const formulario = document.getElementById("formulario");
-    const calle = document.getElementById("calle");
-    const numCalle = document.getElementById("numCalle");
-    const esquina = document.getElementById("esquina");
-    const inputsCantidad = carrito_tbody.getElementsByTagName("input");
+    document.getElementById("formulario").addEventListener("submit", (evento) => {
+        const calle = document.getElementById("calle");
+        const numCalle = document.getElementById("numCalle");
+        const esquina = document.getElementById("esquina");
+        const inputsCantidad = carrito_tbody.getElementsByTagName("input");
 
-    let validar = true
+        let validar = true
 
-    formulario.addEventListener("submit", (evento) => {
-        if (calle.value == "") {
-            calle.classList.add("is-invalid");
-
-            evento.preventDefault();
-            evento.stopPropagation();
-            validar = false
-        };
-
-        if (numCalle.value == "") {
-            numCalle.classList.add("is-invalid");
-
-            evento.preventDefault();
-            evento.stopPropagation();
-            validar = false
-        };
-
-        if (esquina.value == "") {
-            esquina.classList.add("is-invalid");
-
-            evento.preventDefault();
-            evento.stopPropagation();
-            validar = false
-        };
+        invalidFeedbackInput(calle, evento);
+        invalidFeedbackInput(numCalle, evento);
+        invalidFeedbackInput(esquina, evento);
 
         if ((btnPremium.checked || btnExpress.checked || btnStandard.checked) == false) {
             evento.preventDefault();
@@ -267,37 +264,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         };
 
         if (tarjetaCredito.checked) {
-            if (inputNumTarjeta.value == "") {
-                evento.preventDefault();
-                evento.stopPropagation();
-
-                inputNumTarjeta.classList.add("is-invalid");
-                validar = false
-            };
-
-            if (inputCodeTarjeta.value == "") {
-                evento.preventDefault();
-                evento.stopPropagation();
-
-                inputCodeTarjeta.classList.add("is-invalid");
-                validar = false
-            };
-
-            if (inputVencimiento.value == "") {
-                evento.preventDefault();
-                evento.stopPropagation();
-
-                inputVencimiento.classList.add("is-invalid");
-                validar = false
-            };
+            invalidFeedbackInput(inputNumTarjeta, evento);
+            invalidFeedbackInput(inputCodeTarjeta, evento);
+            invalidFeedbackInput(inputVencimiento, evento);
         };
 
-        if (transferencia.checked && inputNumCuenta.value == "") {
-            evento.preventDefault();
-            evento.stopPropagation();
-
-            inputNumCuenta.classList.add("is-invalid");
-            validar = false
+        if (transferencia.checked) {
+            invalidFeedbackInput(inputNumCuenta, evento)
         };
 
         if (validar) {

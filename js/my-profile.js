@@ -5,6 +5,7 @@ let segundoApellido = document.getElementById("segundoApellido");
 let email = document.getElementById("email");
 let telContacto = document.getElementById("telContacto");
 let inputFile = document.getElementById("inputFile");
+
 //Procedimiento para evaluar, si existe esa clave en localStorage, traer su valor al campo correspondiente
 function guardarDatos(claveStorage, input){
     if (localStorage.getItem(`${claveStorage}`)) {
@@ -58,6 +59,12 @@ document.addEventListener("DOMContentLoaded", () => {
             evento.stopPropagation();
         } else {
             localStorage.setItem("PrimerApellido", primerApellido.value);
+        };
+
+        if (email.value == "") {
+            email.classList.add("is-invalid");
+            evento.preventDefault();
+            evento.stopPropagation();
         };
 
         //Si alguno de estos campos tiene valor, setearlo en localStorage

@@ -36,9 +36,9 @@
       </div>
     </div>
   </nav>
-  <main class="container">
-    <form id="formulario" class="row mt-3 needs-validation" novalidate>
-      <div class="col-6 shadow rounded list-group-item">
+  <main class="container-fluid container-md">
+    <form id="formulario" class="row mt-md-3 needs-validation" novalidate>
+      <div class="col-12 col-lg-6 shadow rounded list-group-item">
         <h4>Articulos a comprar</h4>
         <table class="bg-dark bg-gradient text-light rounded list-group-item">
           <tbody id="carrito_tbody">
@@ -60,10 +60,10 @@
             <p class="col-3">USD <span id="total"></span></p>
           </div>
         </fieldset>
-        <button type="submit" class="btn btn-primary col-12">Finalizar compra</button>
+        <button type="submit" class="btn btn-primary col-12 my-2">Finalizar compra</button>
       </div>
-      <div class="col-6">
-        <div class="list-group-item shadow rounded">
+      <div class="col-12 col-lg-5 list-group-item shadow rounded mx-md-auto mt-2 mt-lg-0">
+        <div class="">
           <h4>Datos de envío</h4>
           <fieldset id="fieldsetTipoDeEnvio">
             <legend>Tipo de envío</legend>
@@ -80,7 +80,7 @@
               <label for="standard">Standard 12 a 15 días (5%)</label>
               <div class="invalid-feedback">Debe seleccionar un tipo de envío</div>
             </div>
-            
+
           </fieldset>
           <fieldset class="row">
             <legend>Dirección de envío</legend>
@@ -150,7 +150,7 @@
                     </form>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal">Cerrar</button>
                   </div>
                 </div>
               </div>
